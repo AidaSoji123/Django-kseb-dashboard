@@ -4,18 +4,12 @@ from .models import KsebCds, CdsDailyData, CdsPreset
 
 
 def calculate_totals(sections):
-    """
-    Utility function to calculate total value, actual quantity, and completion percentage
-    for a given set of sections.
-    """
-    total_value = CdsDailyData.objects.filter(section__in=sections).aggregate(
-        total_value=Sum('value')
-    )['total_value'] or 0
-
-    actual_qty = CdsPreset.objects.filter(section__in=sections).aggregate(
-        actual_qty=Sum('actual_qty')
-    )['actual_qty'] or 0
-
+    # Aggregate total value for the given sections
+    total_value = CdsDailyData.objects.aggregate(Sum("value"))['value__sum'] or 0
+    # Aggregate actual quantity for the given sections
+    actual_qty = CdsPreset.objects.aggregate(Sum('actual_qty'))['actual_qty__sum'] or 0
+    
+    # Calculate the completion percentage
     completion_percentage = (total_value / actual_qty) * 100 if actual_qty > 0 else 0
 
     return total_value, actual_qty, completion_percentage
@@ -26,6 +20,8 @@ def index(request):
     circles = KsebCds.objects.filter(category=KsebCds.CategoryChoices.CIRCLE)
     divisions = KsebCds.objects.filter(category=KsebCds.CategoryChoices.DIVISION)
     sections = KsebCds.objects.filter(category=KsebCds.CategoryChoices.SECTION)
+    
+    
 
     # Overview block data
     overview_blocks = [

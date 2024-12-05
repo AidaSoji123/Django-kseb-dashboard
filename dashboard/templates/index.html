@@ -193,6 +193,7 @@ Dashboard
                 <div class="circle text-light">
                   <h3>KOZHIKODE</h3>
                   <h6>CIRCLE</h6>
+                  {{total_value}}
                     <h4>{{ circle.total_value }} km ({{ circle.completion_percentage|floatformat:2 }}%)</h4>
                 </div>
               </div>
@@ -247,6 +248,7 @@ Dashboard
           <label for="circleFilter" class="form-label">Circle</label>
           <select class="form-select" id="circleFilter">
             <option value="">Circles</option>
+            {{circle.total_value}}
             {% for circle in circles %}
             <option value="{{ circle.id }}">{{ circle.title }}</option>
             {% endfor %}
