@@ -188,16 +188,18 @@ Dashboard
       
             <!-- Kozhikode Circle -->
             <div class="row mb-5">
-                {% for circle in circles %}
+         
               <div class="col-12">
                 <div class="circle text-light">
-                  <h3>KOZHIKODE</h3>
+                  <h3>{{ circle.name }}</h3>
                   <h6>CIRCLE</h6>
-                  {{total_value}}
-                    <h4>{{ circle.total_value }} km ({{ circle.completion_percentage|floatformat:2 }}%)</h4>
+                  
+                  
+                    <h4>{{ circle.total_value }} km({{ circle.completion_percentage }}%) <span class="badge bg-primary">{{ circle.total_actual_qty }} km</span> <span class="badge bg-primary">{{ circle.total_qty_ulccs }} km</span></h4>
+                 
                 </div>
               </div>
-              {% endfor %}
+        
             </div>
       
             <!-- Section Cards -->
@@ -207,8 +209,10 @@ Dashboard
                   <div class="card-body chart1">
                     <div class="d-flex text-light">
                       <div>
-                        <p class="mb-0">Kozhikode</p>
-                        <h4 class="mb-0">%</h4>
+                        <p class="mb-0">{{ divisions.kozhikode.name }}</p>
+                        
+                        
+                        <h4 class="mb-0">{{ divisions.kozhikode.total_value }}({{ divisions.kozhikode.completion_percentage }}%) <span class="badge bg-secondary">{{ divisions.kozhikode.total_actual_qty }} </span> <span class="badge bg-secondary">{{ divisions.kozhikode.total_qty_ulccs }}</span></h4>
                       </div>
                     </div>
                   </div>
@@ -219,8 +223,9 @@ Dashboard
                   <div class="card-body chart2">
                     <div class="d-flex text-light">
                       <div>
-                        <p class="mb-0">Balussery</p>
-                        <h4 class="mb-0">%</h4>
+                        <p class="mb-0">{{ divisions.balussery.name }}</p>
+                       
+                          <h4 class="mb-0">{{ divisions.balussery.total_value }}({{ divisions.balussery.completion_percentage }}%)  <span class="badge bg-secondary">{{ divisions.balussery.total_actual_qty }}</span> <span class="badge bg-secondary"> {{ divisions.balussery.total_qty_ulccs }}</span></h4>
                       </div>
                     </div>
                   </div>
@@ -231,8 +236,9 @@ Dashboard
                   <div class="card-body chart3">
                     <div class="d-flex text-light">
                       <div>
-                        <p class="mb-0">Feroke</p>
-                        <h4 class="mb-0">%</h4>
+                        <p class="mb-0">{{ divisions.feroke.name }}</p>
+                        
+                        <h4 class="mb-0">{{ divisions.feroke.total_value }}({{ divisions.feroke.completion_percentage }}%) <span class="badge bg-secondary">{{ divisions.feroke.total_actual_qty }}</span> <span class="badge bg-secondary"> {{ divisions.feroke.total_qty_ulccs }}</span></h4>
                       </div>
                     </div>
                   </div>
@@ -242,96 +248,63 @@ Dashboard
       
 
 
-      <!-- Dropdown Filters -->
-      <div class="row mb-3 mt-5">
-        <div class="col-md-6">
-          <label for="circleFilter" class="form-label">Circle</label>
-          <select class="form-select" id="circleFilter">
-            <option value="">Circles</option>
-            {{circle.total_value}}
-            {% for circle in circles %}
-            <option value="{{ circle.id }}">{{ circle.title }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <div class="col-md-6">
-          <label for="divisionFilter" class="form-label">Divisions</label>
-          <select class="form-select" id="divisionFilter">
-            <option value="">All Divisions</option>
-            {% for division in divisions %}
-            <option value="{{ division.id }}">{{ division.title }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
+     
+<!-- Dropdown Filters -->
+<div class="row mb-3 mt-5">
+  <div class="col-md-6">
+      <label for="circleFilter" class="form-label">Circle</label>
+      <select class="form-select" id="circleFilter">
+          <option value="">Select Circle</option>
+          {% for circle in circles %}
+          <option value="{{ circle.id }}" {% if circle.id == selected_circle_id %} selected {% endif %}>
+              {{ circle.title }}
+          </option>
+          {% endfor %}
+      </select>
+  </div>
+  <div class="col-md-6">
+      <label for="divisionFilter" class="form-label">Divisions</label>
+      <select class="form-select" id="divisionFilter">
+          <option value="">Select Division</option>
+          {% for division in divisions %}
+          <option value="{{ division.id }}" {% if division.id == selected_division_id %} selected {% endif %}>
+              {{ division.title }}
+          </option>
+          {% endfor %}
+      </select>
+  </div>
+</div>
 
-     <!-- Section Data Table -->
+<!-- Section Data Table -->
 <div class="dashboard-container">
-    <h2>Section Data</h2>
-    <div class="table-container">
-        <table class="table table-striped table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>SI.no</th>
-                    <th>Sections</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for section in sections %}
-                <tr>
-                    <td>{{ section.id }}</td>
-                    <td>{{ section.title }}
-                        <span class="badge bg-primary">{{ section.total }}93.00 km</span>
-                        <span class="badge bg-success">{{ section.percentage }}%</span>
-                        <span class="badge bg-warning">{{ section.actual_1 }}24 km</span>
-                        <span class="badge bg-info">{{ section.actual_2 }}28 km</span>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="2">No sections found.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        
-        <!-- Pagination Controls -->
-        <div class="pagination">
-            <ul class="pagination justify-content-center">
-                {% if sections.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1" aria-label="First">
-                            <span aria-hidden="true">&laquo;&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ sections.previous_page_number }}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                {% endif %}
-                
-                <li class="page-item active">
-                    <span class="page-link">
-                        Page {{ sections.number }} of {{ sections.paginator.num_pages }}
-                    </span>
-                </li>
-
-                {% if sections.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ sections.next_page_number }}" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ sections.paginator.num_pages }}" aria-label="Last">
-                            <span aria-hidden="true">&raquo;&raquo;</span>
-                        </a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
+  <h2>Section Data</h2>
+  <div class="table-container">
+      <table class="table table-striped table-bordered">
+          <thead class="table-dark">
+              <tr>
+                  <th>SI.no</th>
+                  <th>Sections</th>
+              </tr>
+          </thead>
+          <tbody id="sectionsTableBody">
+              {% for section in sections %}
+              <tr>
+                  <td>{{ section.id }}</td>
+                  <td>{{ section.title }}
+                      <span class="badge bg-secondary">{{ section.total_value }} km</span>
+                      <span class="badge bg-success">{{ section.completion_percentage }}%</span>
+                      <span class="badge bg-warning">{{ section.actual_qty }} km</span>
+                      <span class="badge bg-info">{{ section.qty_ulccs }} km</span>
+                  </td>
+              </tr>
+              {% empty %}
+              <tr>
+                  <td colspan="6">No sections found.</td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+  </div>
 </div>
 
 </div>
@@ -341,23 +314,28 @@ Dashboard
 </div>
 <!--end page-wrapper-->
 
-    <!-- Bootstrap 5 JavaScript Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
+<!-- Bootstrap 5 JavaScript Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
 function toggleSidebar() {
-  const sidebar = document.getElementById("sidebar");
-  const content = document.getElementById("content");
-  sidebar.classList.toggle("collapsed");
-  content.classList.toggle("collapsed");
+const sidebar = document.getElementById("sidebar");
+const content = document.getElementById("content");
+sidebar.classList.toggle("collapsed");
+content.classList.toggle("collapsed");
 
-  // To show/hide the sidebar on small screens
-  if (window.innerWidth <= 768) {
-    if (sidebar.classList.contains("collapsed")) {
-      sidebar.style.display = "none"; // Hide the sidebar
-    } else {
-      sidebar.style.display = "block"; // Show the sidebar
-    }
+// To show/hide the sidebar on small screens
+if (window.innerWidth <= 768) {
+  if (sidebar.classList.contains("collapsed")) {
+    sidebar.style.display = "none"; // Hide the sidebar
+  } else {
+    sidebar.style.display = "block"; // Show the sidebar
   }
 }
+}
+</script>
 
-{% endblock content %}
+  
+ 
+
+
+{%  endblock content%}
